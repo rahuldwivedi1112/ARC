@@ -10,6 +10,7 @@ import re
 ### result. Name them according to the task ID as in the three
 ### examples below. Delete the three examples. The tasks you choose
 ### must be in the data/training directory, not data/evaluation.
+'''
 def solve_6a1e5592(x):
     return x
 
@@ -18,7 +19,33 @@ def solve_b2862040(x):
 
 def solve_05269061(x):
     return x
-
+'''
+def solve_508bd3b6(x):
+    #calculate the size of the grid
+    #this would be used to check if a point is inside the grid
+    row_min = 0
+    col_min = 0 
+    row_max,col_max = x.shape
+    #calculate the occurances of value 8  
+    row_pos,col_pos = np.where(x==8)
+    #we will start the algorithm from first position of 8 
+    frow_8 = row_pos[0]
+    fcol_8 = col_pos[0]
+    print(x[frow_8,fcol_8])
+    #We need to go in the direction of next 8 until we hit a wall of 2
+    #check upper left
+    if inside_grid(frow_8-1,fcol_8-1) and x[frow_8-1,fcol_8-1]==8:
+        direction = 'upperleft'
+    if inside_grid(frow_8,fcol_8+1) and x[frow_8,fcol_8+1]==8:
+        direction = 'upperright'
+    if inside_grid(frow_8-1,fcol_8-1) and x[frow_8+1,fcol_8]==8:
+        direction = 'lowerleft'
+    if inside_grid(frow_8,fcol_8+1) and x[frow_8+1,fcol_8+1]==8:
+        direction = 'lowerright'
+    print(direction) 
+    
+    
+    return x
 
 def main():
     # Find all the functions defined in this file whose names are
