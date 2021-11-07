@@ -23,12 +23,37 @@ def solve_05269061(x):
 def inside_grid(x,y,shape):
     max_row,max_column = shape
     grid = False
-    print((x,y))
     if (x >=0 and x<=max_row-1) and (y>=0 and y <=max_column-1):
         grid = True
-    print((x,y,grid))
     return grid
 
+def solve_73251a56(x):
+    #there seems to be symmetry accross diagnal
+    #if we move along the diagnal the values in rows and columns are symmetrical
+    #we can use this symmetry to solve this problem.
+    row,col = x.shape
+    # we need to move through points (0,0)->(1,1)...(max,max)
+    for i in range(row):
+        j=i
+        while(inside_grid(i,j, x.shape)):
+            #handle case when value in diagonal is missing replace it with previous value
+            if x[i,i] ==0 and i !=0:
+                x[i,i] = x[i-1,i-1]
+            if x[i,j] != x[j,i]:
+                if x[i,j]==0:
+                    x[i,j] = x[j,i]
+                if x[j,i]==0:
+                    x[j,i] = x[i,j]
+            #case when we dont have value at either side of dialgonal
+            if x[i,j] == x[j,i] and x[i,j] ==0:
+                pass
+                
+            j += 1
+                
+    print(np.unique(x))
+    return x
+
+"""
 def solve_508bd3b6(x):
     #calculate the size of the grid
     #this would be used to check if a point is inside the grid
@@ -152,7 +177,7 @@ def solve_508bd3b6(x):
                 x[frow_8,fcol_8] = 3
 
     return x
-
+"""
 def main():
     # Find all the functions defined in this file whose names are
     # like solve_abcd1234(), and run them.
