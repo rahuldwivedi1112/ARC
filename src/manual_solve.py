@@ -20,12 +20,19 @@ def solve_b2862040(x):
 def solve_05269061(x):
     return x
 '''
+def inside_grid(x,y,shape):
+    max_row,max_column = shape
+    grid = False
+    print((x,y))
+    if (x >=0 and x<=max_row-1) and (y>=0 and y <=max_column-1):
+        grid = True
+    print((x,y,grid))
+    return grid
+
 def solve_508bd3b6(x):
     #calculate the size of the grid
     #this would be used to check if a point is inside the grid
-    row_min = 0
-    col_min = 0 
-    row_max,col_max = x.shape
+
     #calculate the occurances of value 8  
     row_pos,col_pos = np.where(x==8)
     #we will start the algorithm from first position of 8 
@@ -33,18 +40,117 @@ def solve_508bd3b6(x):
     fcol_8 = col_pos[0]
     print(x[frow_8,fcol_8])
     #We need to go in the direction of next 8 until we hit a wall of 2
-    #check upper left
-    if inside_grid(frow_8-1,fcol_8-1) and x[frow_8-1,fcol_8-1]==8:
-        direction = 'upperleft'
-    if inside_grid(frow_8,fcol_8+1) and x[frow_8,fcol_8+1]==8:
-        direction = 'upperright'
-    if inside_grid(frow_8-1,fcol_8-1) and x[frow_8+1,fcol_8]==8:
-        direction = 'lowerleft'
-    if inside_grid(frow_8,fcol_8+1) and x[frow_8+1,fcol_8+1]==8:
-        direction = 'lowerright'
-    print(direction) 
+    #as we take first occurrence of 8 by row, the next 8 can only be 
+    #in the lower left or lower right, We then check the oppoesite corner if 
+    #its outside grid or is 0. based on that we can define the direction as
+    # ul(upperleft),ur(upperright) etc
+    direction = None
+    if inside_grid(frow_8+1,fcol_8-1, x.shape) and x[frow_8+1,fcol_8-1]==8:
+        if inside_grid(frow_8-1,fcol_8+1, x.shape) and x[frow_8-1,fcol_8+1]==0:
+            direction = 'ur'
+        else:
+            direction = 'll'
+    if inside_grid(frow_8+1,fcol_8+1, x.shape) and x[frow_8+1,fcol_8+1]==8:
+        if inside_grid(frow_8-1,fcol_8-1, x.shape) and x[frow_8-1,fcol_8-1]==0:
+            direction = 'ul'
+        else:
+            direction = 'lr'
     
+    print(direction)
+    #once direction is decided we need to keep going untill we hit the wall
+    if direction =='ur':
+        #upper right and upper left wont have an occurrence of 8 else those would have been our starting location
+        while(x[frow_8-1,fcol_8+1]!=2):
+            frow_8 -=1
+            fcol_8 +=1
+            x[frow_8,fcol_8] = 3
+    if direction == 'ul':
+        while(x[frow_8-1,fcol_8-1]!=2):
+            frow_8 -=1
+            fcol_8 -=1
+            x[frow_8,fcol_8] = 3
+    if direction == 'll':
+        # direction of lower left and lower right can have a occurence of 8
+        while(x[frow_8+1,fcol_8-1]!=2):
+            frow_8 +=1
+            fcol_8 -=1
+            #extra condition for occurrence of 8 
+            if x[frow_8,fcol_8] != 8:
+                x[frow_8,fcol_8] = 3
+    if direction == 'lr':
+        while(x[frow_8+1,fcol_8+1]!=2):
+            frow_8 +=1
+            fcol_8 +=1
+            #extra condition for occurrence of 8 
+            if x[frow_8,fcol_8] != 8:
+                x[frow_8,fcol_8] = 3
+        
+    #Once we hit the wall we have decide the bounce direction based on the orientation of wall
+    #for example, if wall is horizontal , upper right will bounce off to lower right
+    #and if wall is vertical, upper right will bounce off to upper left
     
+    #check if wall is vertical or horizontal
+    if x[frow_8,fcol_8+1] ==2 or x[frow_8,fcol_8-1] ==2:
+        wall = 'vertical'
+    else:
+        wall = 'horizontal'
+    print(wall)
+    
+    #based on wall orientation and our initial direction we can calculate the bounce off direction
+    #we need to keep going in new direction and inserting 3 till we hit the end of grid
+    
+    if wall == 'vertical':
+        if direction =='ur':
+        #bounce in upper left by going (-1,-1) from current position
+            while(inside_grid(frow_8-1,fcol_8-1, x.shape)):
+                frow_8 -=1
+                fcol_8 -=1
+                x[frow_8,fcol_8] = 3
+        if  direction =='lr':
+            #bounce in lower left by going (+1,-1) from current position
+            while(inside_grid(frow_8+1,fcol_8-1, x.shape)):
+                frow_8 +=1
+                fcol_8 -=1
+                x[frow_8,fcol_8] = 3
+        if direction =='ul':
+            #bounce in upper right by going(-1,+1) from current position
+            while(inside_grid(frow_8-1,fcol_8+1, x.shape)):
+                frow_8 -=1
+                fcol_8 +=1
+                x[frow_8,fcol_8] = 3
+        if direction =='ll':
+            #bounce in lower right by going(+1,+1) from current position
+            while(inside_grid(frow_8+1,fcol_8+1, x.shape)):
+                frow_8 +=1
+                fcol_8 +=1
+                x[frow_8,fcol_8] = 3
+    #if wall direction is horizontal
+    else: 
+        if direction =='ur':
+        #bounce in lower right by going (+1,+1) from current position
+            while(inside_grid(frow_8+1,fcol_8+1, x.shape)):
+                frow_8 +=1
+                fcol_8 +=1
+                x[frow_8,fcol_8] = 3
+        if  direction =='lr':
+            #bounce in upper right by going (-1,+1) from current position
+            while(inside_grid(frow_8-1,fcol_8+1, x.shape)):
+                frow_8 -=1
+                fcol_8 +=1
+                x[frow_8,fcol_8] = 3
+        if direction =='ul':
+            #bounce in lower left by going (+1,-1) from current position
+            while(inside_grid(frow_8+1,fcol_8-1, x.shape)):
+                frow_8 +=1
+                fcol_8 -=1
+                x[frow_8,fcol_8] = 3
+        if direction =='ll':
+            #bounce in upper left by going (-1,-1) from current position
+            while(inside_grid(frow_8-1,fcol_8-1, x.shape)):
+                frow_8 -=1
+                fcol_8 -=1
+                x[frow_8,fcol_8] = 3
+
     return x
 
 def main():
