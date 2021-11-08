@@ -28,32 +28,61 @@ def inside_grid(x,y,shape):
     return grid
 
 def solve_73251a56(x):
-    #there seems to be symmetry accross diagnal
-    #if we move along the diagnal the values in rows and columns are symmetrical
-    #we can use this symmetry to solve this problem.
+
+    color_list = list(np.unique(x))
+    #remove black color
+    color_list.pop(0)
     row,col = x.shape
-    # we need to move through points (0,0)->(1,1)...(max,max)
-    for i in range(row):
-        j=i
-        while(inside_grid(i,j, x.shape)):
-            #handle case when value in diagonal is missing replace it with previous value
-            if x[i,i] ==0 and i !=0:
-                x[i,i] = x[i-1,i-1]
-            if x[i,j] != x[j,i]:
-                if x[i,j]==0:
-                    x[i,j] = x[j,i]
-                if x[j,i]==0:
-                    x[j,i] = x[i,j]
-            #case when we dont have value at either side of dialgonal
-            if x[i,j] == x[j,i] and x[i,j] ==0:
-                pass
-                
-            j += 1
-                
-    print(np.unique(x))
+    #get the diagonal elelment from the array  apart from zero
+    dia_elements = x.diagonal()
+    dia_element = max(dia_elements[dia_elements !=0])
+    #fetching index and value of one element before the diagnonal element
+    #fetching index and value of one element before the diagnonal element
+    #this is where the color of the pattern starts
+    
+    #handle case when diagonal element is the first elemnt of list 
+    #then we need to take the last element
+    dia_index = color_list.index(dia_element)
+
+    if dia_index == 0:
+        index = len(color_list) - 1
+    else:
+        index = dia_index-1
+
+    value = color_list[index]
+    #run the loop through diagonal barring the last element 
+    #put last element as diagonal value to hanlde case if last element is 0
+    x[row-1][col-1] = dia_element
+    
+    for i in range(row-1):
+        x[i][i]=dia_element
+        j = i+1
+        color_counter = 0
+        curr_col_index = index
+        for a in range((col-j)):
+
+            if a==(i+1):
+                if (curr_col_index+1) == len(color_list):
+                    curr_col_index=0
+                else:
+                    curr_col_index +=1
+                color_counter= 0
+            if color_counter==(i+2):
+                if (curr_col_index+1) == len(color_list):
+                    curr_col_index=0
+                else:
+                    curr_col_index +=1
+                color_counter= 0
+            value = color_list[curr_col_index]
+            if x[i][j] == 0:
+                x[i][j] = value
+            if x[j][i] == 0:
+                x[j][i] = value
+            color_counter +=1
+            j=j+1
+     
     return x
 
-"""
 def solve_508bd3b6(x):
     #calculate the size of the grid
     #this would be used to check if a point is inside the grid
@@ -81,7 +110,7 @@ def solve_508bd3b6(x):
         else:
             direction = 'lr'
     
-    print(direction)
+
     #once direction is decided we need to keep going untill we hit the wall
     if direction =='ur':
         #upper right and upper left wont have an occurrence of 8 else those would have been our starting location
@@ -119,7 +148,7 @@ def solve_508bd3b6(x):
         wall = 'vertical'
     else:
         wall = 'horizontal'
-    print(wall)
+
     
     #based on wall orientation and our initial direction we can calculate the bounce off direction
     #we need to keep going in new direction and inserting 3 till we hit the end of grid
@@ -177,7 +206,7 @@ def solve_508bd3b6(x):
                 x[frow_8,fcol_8] = 3
 
     return x
-"""
+
 def main():
     # Find all the functions defined in this file whose names are
     # like solve_abcd1234(), and run them.
