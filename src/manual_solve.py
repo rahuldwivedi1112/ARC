@@ -3,6 +3,7 @@
 import os, sys
 import json
 import numpy as np
+import math as m
 import re
 
 ### YOUR CODE HERE: write at least three functions which solve
@@ -10,16 +11,33 @@ import re
 ### result. Name them according to the task ID as in the three
 ### examples below. Delete the three examples. The tasks you choose
 ### must be in the data/training directory, not data/evaluation.
-'''
-def solve_6a1e5592(x):
-    return x
 
-def solve_b2862040(x):
-    return x
+def solve_eb5a1d5d(x):
+    #get the number of rows and columns required for the grid
+    #for this we will go to mid row and calculate the change in colors
+    #we will also build the color List in the same step
+    color_list = []
+    row,col = x.shape
+    mid_col_index = m.ceil(col/2)
+    #append first color of the row
+    color_list.append(x[0][mid_col_index])
+    for i in range(row-1):
+        if x[i][mid_col_index]!=x[i+1][mid_col_index]:
+            color_list.append(x[i+1][mid_col_index])
+    #create new matrix based on the number of color changes
+    shape = len(color_list),len(color_list)
+    y = np.zeros(shape,dtype=int)
+    for i in range(len(color_list)):
+        j = (len(color_list)-1)-i
+        while(j>=(0+i)):
+            y[i][j]=color_list[i]
+            y[j][i]=color_list[i]
+            j -=1
+    y = np.rot90(y,-1)
+    y = y + y.T - np.diag(np.diag(y))
+    return y
 
-def solve_05269061(x):
-    return x
-'''
+
 def inside_grid(x,y,shape):
     max_row,max_column = shape
     grid = False
@@ -51,7 +69,7 @@ def solve_73251a56(x):
 
     value = color_list[index]
     #run the loop through diagonal barring the last element 
-    #put last element as diagonal value to hanlde case if last element is 0
+    #put last element as diagonal value to handel case if last element is 0
     x[row-1][col-1] = dia_element
     
     for i in range(row-1):
@@ -92,7 +110,6 @@ def solve_508bd3b6(x):
     #we will start the algorithm from first position of 8 
     frow_8 = row_pos[0]
     fcol_8 = col_pos[0]
-    print(x[frow_8,fcol_8])
     #We need to go in the direction of next 8 until we hit a wall of 2
     #as we take first occurrence of 8 by row, the next 8 can only be 
     #in the lower left or lower right, We then check the oppoesite corner if 
