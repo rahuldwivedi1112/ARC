@@ -36,6 +36,8 @@ def solve_eb5a1d5d(x):
     color shift for each column and takes the maximum.The code then uses this color list to populate one half triangle of the grid 
     including the diagonal. It then uses the symmetrical nature of the grid to populate the other half. This is done by first rotating 
     the grid 90 degrees so that populated half is at upper right and then uses the matrix copy formula to copy the upper half into lower.
+    
+    All the grid examples were solved correctly.
     '''
     #get the row and column size of the input grid
     row,col = x.shape
@@ -94,59 +96,80 @@ def inside_grid(x,y,shape):
 def solve_73251a56(x):
     '''
     Description: 
+    This task involves filling the empty portion of the grid with appropriate color based on the existing pattern. 
+    the colors closer to the diagonal are exapnding in grid as we move across the diagonal.There is a symmetry around 
+    diagonal but that alone is not enough as there are blanks on both sides.Luckily there is an inherent mathamatical pattern 
+    inside the grid which can be utilized to solve the problem
     
+    Solution:
+    The code utilizes a pattern to fill in the correct values and its same for each input grid. We first find out the number of colors 
+    present in the grid and their assigned number. Suppose the color list is [2,3,4,5,6] and diagonal color is 4.From first 
+    position (0,0) the next row element is (diagonal color -1) i,e, 3 and it repeats (row number +1) times.the next element is 
+    then the next color from the color list which repeats (row number +2) times and so on till the grif ends. This pattern is symmetrical 
+    for row and coloumn. Using this the code moves along the diagonal, finding and filling missing color in diagnoal and build the 
+    pattern in row and column
     
+    All the grid examples were solved correctly.
     
     '''
+    #get the unique colors in the grid.
     color_list = list(np.unique(x))
     #remove black color
     color_list.pop(0)
     row,col = x.shape
-    #get the diagonal elelment from the array  apart from zero
+    #get the diagonal element from the array  apart from zero
     dia_elements = x.diagonal()
     dia_element = max(dia_elements[dia_elements !=0])
     #fetching index and value of one element before the diagnonal element
-    #fetching index and value of one element before the diagnonal element
     #this is where the color of the pattern starts
-    
+    dia_index = color_list.index(dia_element)
     #handle case when diagonal element is the first elemnt of list 
     #then we need to take the last element
-    dia_index = color_list.index(dia_element)
-
     if dia_index == 0:
         index = len(color_list) - 1
     else:
         index = dia_index-1
-
+    #get the color value at the pattern start index
     value = color_list[index]
     #run the loop through diagonal barring the last element 
-    #put last element as diagonal value to handel case if last element is 0
+    #put last element as diagonal value to handle case if last element is 0
     x[row-1][col-1] = dia_element
     
     for i in range(row-1):
+        #put the diagonal value as the diagonal element
         x[i][i]=dia_element
+        #Start J as i+1 as we need to start pattern from next cell in row and column
         j = i+1
+        #A counter to track when to switch color to the next in the color list 
         color_counter = 0
         curr_col_index = index
+        #run the loop till the end of the grid which can be calculated as col-j from each diagonal position
         for a in range((col-j)):
-
+            #There is always a color change from the next cell, below code handles that
+            #and chooses the next color
             if a==(i+1):
+                #If we reach end of color list we need to start from the beginning
                 if (curr_col_index+1) == len(color_list):
                     curr_col_index=0
                 else:
                     curr_col_index +=1
+                #reset the color counter
                 color_counter= 0
+            #Choose the next color at i+2 position 
             if color_counter==(i+2):
                 if (curr_col_index+1) == len(color_list):
                     curr_col_index=0
                 else:
                     curr_col_index +=1
                 color_counter= 0
+            #get the color value at the current color index
             value = color_list[curr_col_index]
+            # fill the value of blank cell in row or column
             if x[i][j] == 0:
                 x[i][j] = value
             if x[j][i] == 0:
                 x[j][i] = value
+            #increment the color and column counter.
             color_counter +=1
             j=j+1
      
