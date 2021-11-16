@@ -1,5 +1,13 @@
 #!/usr/bin/python
 
+"""
+
+Student name(s): Rahul Dwivedi
+Student ID(s):   21252240
+GitHub URL: https://github.com/rahuldwivedi1112/ARC
+
+"""
+
 import os, sys
 import json
 import numpy as np
@@ -14,49 +22,69 @@ import itertools
 ### must be in the data/training directory, not data/evaluation.
 
 def solve_eb5a1d5d(x):
-    #get the number of rows and columns required for the grid
-    #for this we will go to mid row and calculate the change in colors
-    #we will also build the color List in the same step
+    '''
+    Description: 
+    The task demonstration has a block of color inside another color in layers. The number of colors and block size/position 
+    of each color is not constant and varies with each example. The output of transformation is a symmetrical grid with each 
+    color making a box of a single cell width and color inside the block follows same sequence as that of test grid. The 
+    innermost color would occupy a single cell. The whole example can be treated as creating a Russian doll of colors.  
     
+    Solution: 
+    The code solves this by first calculating which colors would make up the boxes. This is done by calculating the color changes
+    on the input grid. The size of grid is calculated by how many times the color shift happens though doing [(number of color*2) -1]
+    would also give the row/column size.As there is no geric position where the inner block of color would be, the code calculates the
+    color shift for each column and takes the maximum.The code then uses this color list to populate one half triangle of the grid 
+    including the diagonal. It then uses the symmetrical nature of the grid to populate the other half. This is done by first rotating 
+    the grid 90 degrees so that populated half is at upper right and then uses the matrix copy formula to copy the upper half into lower.
+    '''
+    #get the row and column size of the input grid
     row,col = x.shape
-    '''
-    mid_col_index = m.ceil(col/2)
-    #append first color of the row
-    color_list.append(x[0][mid_col_index])
-    for i in range(row-1):
-        if x[i][mid_col_index]!=x[i+1][mid_col_index]:
-            color_list.append(x[i+1][mid_col_index])
-    '''
-    #after checking mid column and mid row, i think the more generic way to do it 
-    #is to check each row and build the color list having maximum number of colors
-    # this would again require 2 for loops which is not ideal but would work for all 
-    #scenarios
+    #build the list of color changes. after checking mid column and mid row,the more generic way to do it 
+    #is to check each row and build the color list having maximum number of colors. this would again require 2 for 
+    #loops which is not ideal but would work for all scenarios
     final_color_list =[]
+    #Loop through all columns
     for j in range(col):
         color_list = []
         #append the first color of each row
         color_list.append(x[0][j])
+        #loop through the second last row as we are comparing next value to previous
         for i in range(row-1):
             if x[i][j]!=x[i+1][j]:
                 color_list.append(x[i+1][j])
+        #Check for the color list of max length
         if len(final_color_list) <= len(color_list):
             final_color_list = color_list      
 
     #create new matrix based on the number of color changes
     shape = len(final_color_list),len(final_color_list)
+    #create the grid with 0's using numpy 
     y = np.zeros(shape,dtype=int)
+    #populate the first half of the grid including the diagonal
+    #the first loop is for each color in the color list
     for i in range(len(final_color_list)):
+        #the value of j is based on color list and which iteration we are on
+        #for first color it goes from 0,0 to 0,max(column) and max(row),0
+        #but for second color it should go from 1,1 to 1,(max(col)-1) and (max(row)-1),1
         j = (len(final_color_list)-1)-i
         while(j>=(0+i)):
+            #populate the value of that color
             y[i][j]=final_color_list[i]
             y[j][i]=final_color_list[i]
             j -=1
+    #rotate the matrix by 90 degrees
     y = np.rot90(y,-1)
+    #copy the upper half to lower half using Matrix copy rule.
     y = y + y.T - np.diag(np.diag(y))
     return y
 
 
 def inside_grid(x,y,shape):
+    '''
+    Description:
+    This function takes in the x and y coordinate and shape of the grid
+    and returns whether that coordinate is present inside the grid or not
+    '''
     max_row,max_column = shape
     grid = False
     if (x >=0 and x<=max_row-1) and (y>=0 and y <=max_column-1):
@@ -64,7 +92,12 @@ def inside_grid(x,y,shape):
     return grid
 
 def solve_73251a56(x):
-
+    '''
+    Description: 
+    
+    
+    
+    '''
     color_list = list(np.unique(x))
     #remove black color
     color_list.pop(0)
@@ -120,6 +153,12 @@ def solve_73251a56(x):
     return x
 
 def solve_508bd3b6(x):
+    '''
+    Description: 
+    
+    
+    
+    '''
     #calculate the size of the grid
     #this would be used to check if a point is inside the grid
 
