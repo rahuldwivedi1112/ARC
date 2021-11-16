@@ -5,6 +5,7 @@ import json
 import numpy as np
 import math as m
 import re
+import itertools
 
 ### YOUR CODE HERE: write at least three functions which solve
 ### specific tasks by transforming the input x and returning the
@@ -16,22 +17,39 @@ def solve_eb5a1d5d(x):
     #get the number of rows and columns required for the grid
     #for this we will go to mid row and calculate the change in colors
     #we will also build the color List in the same step
-    color_list = []
+    
     row,col = x.shape
+    '''
     mid_col_index = m.ceil(col/2)
     #append first color of the row
     color_list.append(x[0][mid_col_index])
     for i in range(row-1):
         if x[i][mid_col_index]!=x[i+1][mid_col_index]:
             color_list.append(x[i+1][mid_col_index])
+    '''
+    #after checking mid column and mid row, i think the more generic way to do it 
+    #is to check each row and build the color list having maximum number of colors
+    # this would again require 2 for loops which is not ideal but would work for all 
+    #scenarios
+    final_color_list =[]
+    for j in range(col):
+        color_list = []
+        #append the first color of each row
+        color_list.append(x[0][j])
+        for i in range(row-1):
+            if x[i][j]!=x[i+1][j]:
+                color_list.append(x[i+1][j])
+        if len(final_color_list) <= len(color_list):
+            final_color_list = color_list      
+
     #create new matrix based on the number of color changes
-    shape = len(color_list),len(color_list)
+    shape = len(final_color_list),len(final_color_list)
     y = np.zeros(shape,dtype=int)
-    for i in range(len(color_list)):
-        j = (len(color_list)-1)-i
+    for i in range(len(final_color_list)):
+        j = (len(final_color_list)-1)-i
         while(j>=(0+i)):
-            y[i][j]=color_list[i]
-            y[j][i]=color_list[i]
+            y[i][j]=final_color_list[i]
+            y[j][i]=final_color_list[i]
             j -=1
     y = np.rot90(y,-1)
     y = y + y.T - np.diag(np.diag(y))
