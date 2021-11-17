@@ -19,9 +19,9 @@ bit of coding. It also provides various functions to rearrange elements of an ar
 Solve functions:
 Though all three tasks were different from each other, task eb5a1d5d and 73251a56 both required finding a color pattern list and using
 that to either fill in symmetrical pattern or create a new grid with subset of that pattern. Task 508bd3b6 involved extending the trajectory
-of an object when it bounces off a red wall. All three tasks assumes that the human or machine should have prior understanding of various techniques.First two tasks require understanding of patterns,symmetry and downscaling of the grid shape where as the third requires knowledge of geometry, shapes and whether the point is inside or outside.
+of an object when it bounces off a red wall. All three tasks assumes that the human or machine should have prior understanding of various techniques.First two tasks require understanding of patterns,symmetry and downscaling of the grid shape where as the third requires knowledge of geometry, shapes and whether the point is inside or outside. 
 
-There is no common approach which would work on all of the 3 tasks, making them difficult for a machine to solve compared to a human. Uniqueness of the tasks also adds to the complexity as there is no as such training data which could be used to train the ML models.
+After going through many taks I  can say that all tasks had high level similarities like patterns that needed to be matched, shape recognition, spatial(grid) awareness etc.There is no common approach which would work on all of the tasks, making them difficult for a machine to solve compared to a human. Uniqueness of the tasks also adds to the complexity as there is no as such training data which could be used to train the ML models. 
 
 """
 
