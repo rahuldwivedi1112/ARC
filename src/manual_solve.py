@@ -192,6 +192,26 @@ def solve_73251a56(x):
 
     return x
 
+def get_travel_points(direction):
+    '''
+    Description:
+    the function returns the x and y points from the origin (0,0) based on direction 
+
+    Parameters:
+    direction: Direction in which we should move with respect to the starting point
+
+    ''' 
+    
+    points_dict = {
+        "ur":(-1,1), # an Upper right point would be row -1 and col+1
+        "ul":(-1,-1), # an Upper left point would be row -1 and col-1
+        "ll":(1,-1), # a lower  left point would be row+1 and col-1
+        "lr":(1,1) # a lower  left point would be row+1 and col-1
+    }
+    
+    return points_dict.get(direction)
+    
+
 def grid_travel(x,row,col,direction=None):
     '''
     Description:
@@ -205,16 +225,9 @@ def grid_travel(x,row,col,direction=None):
     col : column position of the start point
     direction: Direction in which we should move with respect to the starting point
 
-    '''
-    #declaring dict for code readability, previously was done through multiple If statements
-    points_dict = {
-        "ur":(-1,1), # an Upper right point would be row -1 and col+1
-        "ul":(-1,-1), # an Upper left point would be row -1 and col-1
-        "ll":(1,-1), # a lower  left point would be row+1 and col-1
-        "lr":(1,1) # a lower  left point would be row+1 and col-1
-    }
-    
-    xp,yp = points_dict.get(direction)
+    '''   
+    #get travel points based on direction
+    xp,yp = get_travel_points(direction)
     
     while(inside_grid(row+xp,col+yp, x.shape)):
                 row +=xp
@@ -222,6 +235,7 @@ def grid_travel(x,row,col,direction=None):
                 x[row,col] = 3
 
     return x
+
 
 def solve_508bd3b6(x):
     '''
@@ -271,36 +285,18 @@ def solve_508bd3b6(x):
 
 
     #once direction is decided we need to keep going untill we hit the wall
-    if direction =='ur':
-        #upper right and upper left wont have an occurrence of 8 else those would have been our starting location
-        while(x[frow_8-1,fcol_8+1]!=2):
-            frow_8 -=1
-            fcol_8 +=1
-            x[frow_8,fcol_8] = 3
-    if direction == 'ul':
-        while(x[frow_8-1,fcol_8-1]!=2):
-            frow_8 -=1
-            fcol_8 -=1
-            x[frow_8,fcol_8] = 3
-    if direction == 'll':
-        # direction of lower left and lower right can have a occurence of 8
-        while(x[frow_8+1,fcol_8-1]!=2):
-            frow_8 +=1
-            fcol_8 -=1
+    #get the travel points based on direction
+    xp,yp = get_travel_points(direction)
+    
+    
+    while(x[frow_8+xp,fcol_8+yp]!=2):
+            frow_8 +=xp
+            fcol_8 +=yp
             #extra condition for occurrence of 8
             if x[frow_8,fcol_8] != 8:
                 x[frow_8,fcol_8] = 3
-    if direction == 'lr':
-        while(x[frow_8+1,fcol_8+1]!=2):
-            frow_8 +=1
-            fcol_8 +=1
-            #extra condition for occurrence of 8
-            if x[frow_8,fcol_8] != 8:
-                x[frow_8,fcol_8] = 3
-
-    #Once we hit the wall we have decide the bounce direction based on the orientation of wall
-    #for example, if wall is horizontal , upper right will bounce off to lower right
-    #and if wall is vertical, upper right will bounce off to upper left
+    
+    
 
     #check if wall is vertical or horizontal by checking neighbors in vertical corners.
     if x[frow_8,fcol_8+1] ==2 or x[frow_8,fcol_8-1] ==2:
@@ -308,7 +304,9 @@ def solve_508bd3b6(x):
     else:
         wall = 'horizontal'
     
-    #define mapping dictionary for more code readability
+    #Once we hit the wall we have decide the bounce direction based on the orientation of wall
+    #for example, if wall is horizontal , upper right will bounce off to lower right
+    #and if wall is vertical, upper right will bounce off to upper left
     direction_dict = {
         "vertical":{
             "ur":"ul",
@@ -324,7 +322,7 @@ def solve_508bd3b6(x):
         }
         
     }
-    #based on wall orientation and our initial direction we can calculate the bounce off direction
+    
     #we need to keep going in new direction and inserting 3 till we hit the end of grid
     x = grid_travel(x,frow_8,fcol_8,direction_dict.get(wall).get(direction))
 
