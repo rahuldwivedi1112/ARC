@@ -115,7 +115,7 @@ def solve_73251a56(x):
     Description:
     This task involves filling the empty portion of the grid with appropriate color based on the existing pattern.
     the colors closer to the diagonal are expanding in grid as we move across the diagonal.There is a symmetry around
-    diagonal but that alone is not enough as there are blanks on both sides.Luckily there is an inherent mathamatical pattern
+    diagonal but that alone is not enough as there are blanks on both sides.Luckily there is an inherent mathematical pattern
     inside the grid which can be utilized to solve the problem
 
     Solution:
