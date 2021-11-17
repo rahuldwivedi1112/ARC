@@ -1,11 +1,17 @@
-# NUIG MSc AI CT5148 Assignment : arc
+# NUIG MSc AI CT5148 Assignment : ARC
 This repository contains the solution of assignment set as part of MSc AI course in NUI Galway. The assignment was to take any 3 Abstraction and Reasoning Corpus tasks from the data/training folder and provide a hand coded solutions for them using python. Details of my chosen tasks are as below
 
 - `eb5a1d5d`: The task demonstration has a block of color inside another color in layers. The number of colors and block size/position of each color is not constant and varies with each example. The output of transformation is a symmetrical grid with each color making a box of a single cell width and color inside the block follows same sequence as that of test grid. The innermost color would occupy a single cell. The whole example can be treated as creating a Russian doll of colors.
 
+![eb5a1d5d](https://github.com/rahuldwivedi1112/ARC/blob/master/src/eb5a1d5d.png)
+
 - `73251a56`: This task involves filling the empty portion of the grid with appropriate color based on the existing pattern. The colors closer to the diagonal are expanding in grid as we move across the diagonal. There is a symmetry around diagonal but that alone is not enough as there are blanks on both sides. Luckily there is an inherent mathematical pattern inside the grid which can be utilized to solve the problem
 
+![73251a56](https://github.com/rahuldwivedi1112/ARC/blob/master/src/73251a56.png)
+
 - `508bd3b6`: The task can be viewed as an instrument firing an object towards a wall. Upon hitting the wall, the object then bounces off and travels towards the end of the grid. Here the Orientation of wall can be vertical or horizontal and it can be of varied thickness. The length of the instrument can also vary but it will start from a point which is on edge of the grid. The solution needs to find the trajectory of the object and put the color on its path based on which direct it was fired from and from what length instrument. The bounce of direction also depends on the direction the object hit the wall and orientation of the wall
+
+![508bd3b6](https://github.com/rahuldwivedi1112/ARC/blob/master/src/508bd3b6.png)
 
 The solution is present in src/manual_solve.py and it uses basic python and Numpy library to solve the tasks. Details on ARC are as follows.
 
