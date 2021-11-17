@@ -11,7 +11,7 @@ This repository contains the solution of assignment set as part of MSc AI course
 
 - `508bd3b6`: The task can be viewed as an instrument firing an object towards a wall. Upon hitting the wall, the object then bounces off and travels towards the end of the grid. Here the Orientation of wall can be vertical or horizontal and it can be of varied thickness. The length of the instrument can also vary but it will start from a point which is on edge of the grid. The solution needs to find the trajectory of the object and put the color on its path based on which direct it was fired from and from what length instrument. The bounce of direction also depends on the direction the object hit the wall and orientation of the wall
 
-![508bd3b6](https://github.com/rahuldwivedi1112/ARC/blob/master/src/508bd3b6.png)
+![508bd3b6](https://github.com/rahuldwivedi1112/ARC/blob/master/src/508db3b6.png)
 
 The solution is present in src/manual_solve.py and it uses basic python and Numpy library to solve the tasks. Details on ARC are as follows.
 
