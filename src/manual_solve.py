@@ -14,11 +14,13 @@ Libraries:
 All three tasks were solved by basic python using Loops and conditional statements. i have used Numpy library in one of the task  
 for matrix manipulation which i have found to be most useful. It provided built in functions to perform operations such as matrix 
 creation with zeros ,extract  a diagonal of the matrix and rotating a matrix 90 degrees, which otherwise would have required complicated
-bit of coding.
+bit of coding. It also provides various functions to rearrange elements of an array which I used for my first iteration but were not required for the final code
 
 Solve functions:
 Though all three tasks were different from each other, task eb5a1d5d and 73251a56 both required finding a color pattern list and using 
-that to either fill in symmetrical pattern or create a new grid with subset of that pattern. Task 508bd3b6 involved extending the trajectory of an object when it bounces off a red wall. All three tasks assumes that the human or machine should have prior understanding of various techniques.First two tasks require understanding of patterns,symmetry and downscaling of the grid shape where as the third requires knowledge of geometry, shapes and whether the point is inside or outside. As there is no common approach which would work on all of the 3 tasks, making them difficult for a machine to solve compared to a human. Uniqueness of the tasks also adds to the complexity as there is no as such training data which could be used to train the models. The ARC presents a one of a kind test for machine intelligence.    
+that to either fill in symmetrical pattern or create a new grid with subset of that pattern. Task 508bd3b6 involved extending the trajectory of an object when it bounces off a red wall. All three tasks assumes that the human or machine should have prior understanding of various techniques.First two tasks require understanding of patterns,symmetry and downscaling of the grid shape where as the third requires knowledge of geometry, shapes and whether the point is inside or outside.
+
+There is no common approach which would work on all of the 3 tasks, making them difficult for a machine to solve compared to a human. Uniqueness of the tasks also adds to the complexity as there is no as such training data which could be used to train the ML models. 
 
 """
 
