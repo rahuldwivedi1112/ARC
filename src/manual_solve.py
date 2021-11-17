@@ -206,29 +206,19 @@ def grid_travel(x,row,col,direction=None):
     direction: Direction in which we should move with respect to the starting point
 
     '''
-    # an Upper right point would be row -1 and col+1
-    if direction == 'ur':
-        while(inside_grid(row-1,col+1, x.shape)):
-                row -=1
-                col +=1
-                x[row,col] = 3
-    # an Upper left point would be row -1 and col-1
-    elif direction == 'ul':
-        while(inside_grid(row-1,col-1, x.shape)):
-                row -=1
-                col -=1
-                x[row,col] = 3
-    # a lower  left point would be row+1 and col-1
-    elif direction == 'll':
-        while(inside_grid(row+1,col-1, x.shape)):
-                row +=1
-                col -=1
-                x[row,col] = 3
-    # a lower  left point would be row+1 and col-1
-    elif direction == 'lr':
-        while(inside_grid(row+1,col+1, x.shape)):
-                row +=1
-                col +=1
+    #declaring dict for code readability, previously was done through multiple If statements
+    points_dict = {
+        "ur":(-1,1), # an Upper right point would be row -1 and col+1
+        "ul":(-1,-1), # an Upper left point would be row -1 and col-1
+        "ll":(1,-1), # a lower  left point would be row+1 and col-1
+        "lr":(1,1) # a lower  left point would be row+1 and col-1
+    }
+    
+    xp,yp = points_dict.get(direction)
+    
+    while(inside_grid(row+xp,col+yp, x.shape)):
+                row +=xp
+                col +=yp
                 x[row,col] = 3
 
     return x
@@ -317,44 +307,26 @@ def solve_508bd3b6(x):
         wall = 'vertical'
     else:
         wall = 'horizontal'
-
-
+    
+    #define mapping dictionary for more code readability
+    direction_dict = {
+        "vertical":{
+            "ur":"ul",
+            "lr":"ll",
+            "ul":"ur",
+            "ll":"lr"
+        },
+        "horizontal": {
+            "ur":"lr",
+            "lr":"ur",
+            "ul":"ll",
+            "ll":"ul"
+        }
+        
+    }
     #based on wall orientation and our initial direction we can calculate the bounce off direction
     #we need to keep going in new direction and inserting 3 till we hit the end of grid
-
-    if wall == 'vertical':
-        if direction =='ur':
-        #bounce in upper left by going (-1,-1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ul')
-
-        if  direction =='lr':
-            #bounce in lower left by going (+1,-1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ll')
-
-        if direction =='ul':
-            #bounce in upper right by going(-1,+1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ur')
-
-        if direction =='ll':
-            #bounce in lower right by going(+1,+1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'lr')
-
-    #if wall direction is horizontal
-    else:
-        if direction =='ur':
-            #bounce in lower right by going (+1,+1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ll')
-
-        if  direction =='lr':
-            #bounce in upper right by going (-1,+1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ur')
-        if direction =='ul':
-            #bounce in lower left by going (+1,-1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ll')
-
-        if direction =='ll':
-            #bounce in upper left by going (-1,-1) from current position
-            x = grid_travel(x,frow_8,fcol_8,'ul')
+    x = grid_travel(x,frow_8,fcol_8,direction_dict.get(wall).get(direction))
 
     return x
 
