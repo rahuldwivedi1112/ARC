@@ -8,6 +8,21 @@ GitHub URL: https://github.com/rahuldwivedi1112/ARC
 
 """
 
+"""
+Summary
+Libraries: 
+All three taks were solved by basic python using Loops and conditional statements. i have used Numpy library in one of the task  
+for matrix manipulation which i have found to be most useful. It provided built in functions to perform operations such as matrix 
+creation with zeros ,exatract a diagonal of the matrix and rotating a matrix 90 degrees, which otherwise would have required complicated
+bit of coding.
+
+Solve functions:
+Though all three tasks were different from each other task eb5a1d5d and 73251a56 both required 
+
+
+
+"""
+
 import os, sys
 import json
 import numpy as np
@@ -175,17 +190,68 @@ def solve_73251a56(x):
      
     return x
 
+def grid_travel(x,row,col,direction=None):
+    '''
+    Description:
+    the function travels along the direction specified starting from position row,col
+    if the next point is inside the grid, it puts the value of 3 on the grid cell.This
+    continues until we reach the end of grid.
+    
+    Parameters:
+    x : grid
+    row : row position of the start point
+    col : column position of the start point
+    direction: Direction in which we should move with respect to the starting point
+    
+    '''
+    # an Upper right point would be row -1 and col+1
+    if direction == 'ur':
+        while(inside_grid(row-1,col+1, x.shape)):
+                row -=1
+                col +=1
+                x[row,col] = 3
+    # an Upper left point would be row -1 and col-1
+    elif direction == 'ul':
+        while(inside_grid(row-1,col-1, x.shape)):
+                row -=1
+                col -=1
+                x[row,col] = 3
+    # a lower  left point would be row+1 and col-1
+    elif direction == 'll':
+        while(inside_grid(row+1,col-1, x.shape)):
+                row +=1
+                col -=1
+                x[row,col] = 3
+    # a lower  left point would be row+1 and col-1
+    elif direction == 'lr':
+        while(inside_grid(row+1,col+1, x.shape)):
+                row +=1
+                col +=1
+                x[row,col] = 3
+
+    return x
+
 def solve_508bd3b6(x):
     '''
     Description: 
+    The task can be viewed as an instrument firing an object towards a wall. Upon hitting the wall, the object then bounces off
+    and travels towards the end of the grid. Here the Orientation of wall can be vertical or horizontal and it can be of varied thickness.
+    The length of the instrument can also vary but it will start from a point which is on edge of the grid. The solution needs to find the
+    trajectory of the object and put the color on its path based on which direct it was fired from and from what length instrument. The
+    bounce of direction also depends on the direction the object hit the wall and orientation of the wall
     
     
+    Solution: 
+    The codes first find the position of an edge of the firing instrument by looking row wise. It will always get the bottom edge or top 
+    edge but never the middle of the instrument. Based on the direction of other points of the instrument the code calculates the firing
+    direction and then starts coloring the trajectory until it hits the wall. The code then calculates the orientation of wall but checking
+    its nearby cells. Once it has calculated the wall position and hitting direction it then paints the trajectory in bounce off direction
+    until it reaches the end of the grid
+    
+    All the grid examples were solved correctly.
     
     '''
-    #calculate the size of the grid
-    #this would be used to check if a point is inside the grid
-
-    #calculate the occurances of value 8  
+    #calculate the occurances of value 8 which gives us the edge of instrument 
     row_pos,col_pos = np.where(x==8)
     #we will start the algorithm from first position of 8 
     frow_8 = row_pos[0]
@@ -193,17 +259,21 @@ def solve_508bd3b6(x):
     #We need to go in the direction of next 8 until we hit a wall of 2
     #as we take first occurrence of 8 by row, the next 8 can only be 
     #in the lower left or lower right, We then check the oppoesite corner if 
-    #its outside grid or is 0. based on that we can define the direction as
+    #its outside grid or its 8 or 0. based on that we can define the direction as
     # ul(upperleft),ur(upperright) etc
     direction = None
+    #if lowerleft is 8 and upper right is 0 then we need to fire in upper right
     if inside_grid(frow_8+1,fcol_8-1, x.shape) and x[frow_8+1,fcol_8-1]==8:
         if inside_grid(frow_8-1,fcol_8+1, x.shape) and x[frow_8-1,fcol_8+1]==0:
             direction = 'ur'
+        #else we have to fire in opposite direction which is lower left
         else:
             direction = 'll'
     if inside_grid(frow_8+1,fcol_8+1, x.shape) and x[frow_8+1,fcol_8+1]==8:
+        #if lowerright is 8 and upper right is 0 then we need to fire in upper right
         if inside_grid(frow_8-1,fcol_8-1, x.shape) and x[frow_8-1,fcol_8-1]==0:
             direction = 'ul'
+        #else we have to fire in opposite direction which is lower right
         else:
             direction = 'lr'
     
@@ -240,7 +310,7 @@ def solve_508bd3b6(x):
     #for example, if wall is horizontal , upper right will bounce off to lower right
     #and if wall is vertical, upper right will bounce off to upper left
     
-    #check if wall is vertical or horizontal
+    #check if wall is vertical or horizontal by checking neighbors in vertical corners.
     if x[frow_8,fcol_8+1] ==2 or x[frow_8,fcol_8-1] ==2:
         wall = 'vertical'
     else:
@@ -253,54 +323,36 @@ def solve_508bd3b6(x):
     if wall == 'vertical':
         if direction =='ur':
         #bounce in upper left by going (-1,-1) from current position
-            while(inside_grid(frow_8-1,fcol_8-1, x.shape)):
-                frow_8 -=1
-                fcol_8 -=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ul')
+
         if  direction =='lr':
             #bounce in lower left by going (+1,-1) from current position
-            while(inside_grid(frow_8+1,fcol_8-1, x.shape)):
-                frow_8 +=1
-                fcol_8 -=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ll')
+
         if direction =='ul':
             #bounce in upper right by going(-1,+1) from current position
-            while(inside_grid(frow_8-1,fcol_8+1, x.shape)):
-                frow_8 -=1
-                fcol_8 +=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ur')
+
         if direction =='ll':
             #bounce in lower right by going(+1,+1) from current position
-            while(inside_grid(frow_8+1,fcol_8+1, x.shape)):
-                frow_8 +=1
-                fcol_8 +=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'lr')
+
     #if wall direction is horizontal
     else: 
         if direction =='ur':
-        #bounce in lower right by going (+1,+1) from current position
-            while(inside_grid(frow_8+1,fcol_8+1, x.shape)):
-                frow_8 +=1
-                fcol_8 +=1
-                x[frow_8,fcol_8] = 3
+            #bounce in lower right by going (+1,+1) from current position
+            x = grid_travel(x,frow_8,fcol_8,'ll')
+
         if  direction =='lr':
             #bounce in upper right by going (-1,+1) from current position
-            while(inside_grid(frow_8-1,fcol_8+1, x.shape)):
-                frow_8 -=1
-                fcol_8 +=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ur')
         if direction =='ul':
             #bounce in lower left by going (+1,-1) from current position
-            while(inside_grid(frow_8+1,fcol_8-1, x.shape)):
-                frow_8 +=1
-                fcol_8 -=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ll')
+
         if direction =='ll':
             #bounce in upper left by going (-1,-1) from current position
-            while(inside_grid(frow_8-1,fcol_8-1, x.shape)):
-                frow_8 -=1
-                fcol_8 -=1
-                x[frow_8,fcol_8] = 3
+            x = grid_travel(x,frow_8,fcol_8,'ul')
 
     return x
 
