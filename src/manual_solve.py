@@ -30,7 +30,6 @@ import json
 import numpy as np
 import math as m
 import re
-import itertools
 
 ### YOUR CODE HERE: write at least three functions which solve
 ### specific tasks by transforming the input x and returning the
